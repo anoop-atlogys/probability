@@ -16,6 +16,17 @@ class Ball:
     def __repr__(self):
         return f'{self.color.value}{self.number}'
 
+    @classmethod
+    def generate_balls(cls, red_count, green_count, blue_count):
+        balls = list()
+        for color, count in zip(list(Color), [red_count, green_count, blue_count]):
+            for number in range(1, count+1):
+                balls.append(
+                    cls(color, number)
+                )
+
+        return balls
+
 
 class CombinationNode:
 
@@ -101,21 +112,10 @@ if __name__ == '__main__':
 
     assert red_count + green_count + blue_count > 5, "Number of balls are less than 6"
 
-    balls = list()
-    for color, count in zip(list(Color), [red_count, green_count, blue_count]):
-        for number in range(1, count+1):
-            balls.append(Ball(color, number))
+    balls = Ball.generate_balls(red_count, green_count, blue_count)
+    #print(balls)
 
-    print(balls)
-
-    nodes = list()
-    for selection in list(combinations(balls, 2)):
-        nodes.append(
-            CombinationNode(
-                tuple(set(balls)-set(selection)),
-                selection,
-            )
-        )
+    nodes = CombinationNode.next_choices(balls)
 
     #print(nodes)
     success_cases, total_cases = calculator(nodes)
